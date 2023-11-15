@@ -1,4 +1,4 @@
-# Automating-Tasks-In-Active-Directory
+# Automating-User-Tasks-In-Active-Directory
 One of the most powerful aspects about Powershell is how it is able to interact with Active Directory. In this module I am going to focusing on creating and removing user accounts, but be aware there are over 20 commands covering different aspects of Active Directory.
 
 <h2>Technologies Used</h2>
