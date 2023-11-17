@@ -4,7 +4,8 @@ One of the most powerful aspects about Powershell is how it is able to interact 
 <h2>Technologies Used</h2>
 
 - Windows Server 2022 Version 21H2
-- Powershell 
+- Powershell
+- Active Directory
 
 <h2>GetADUser Script</h2>
 Before beginning, I encourage making this script as it will make checking to see if a user was successfully added to Active Directory much faster then manually checking. For personal testing this script is handy, but in an enterprise situation it doesn't have a great usecase as it is very limited. What it does is pull any User that has a samAccountName, which is the User Logon Property. Every User account has this value so it pulls every name in the Domain. 
