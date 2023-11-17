@@ -4,6 +4,7 @@ One of the most powerful aspects about Powershell is how it is able to interact 
 <h2>Technologies Used</h2>
 
 - Windows Server 2022 Version 21H2
+- VMWare Workstation Player
 - Powershell
 - Active Directory
 
