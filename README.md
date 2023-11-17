@@ -9,13 +9,15 @@ One of the most powerful aspects about Powershell is how it is able to interact 
 - Active Directory
 
 <h2>GetADUser Script</h2>
-Before beginning, I encourage making this script as it will make checking to see if a user was successfully added to Active Directory much faster then manually checking. For personal testing this script is handy, but in an enterprise situation it doesn't have a great usecase as it is very limited. What it does is pull any User that has a samAccountName, which is the User Logon Property. Every User account has this value so it pulls every name in the Domain. 
+Before beginning, I encourage making this script as it will make checking to see if a user was successfully added to Active Directory much faster then manually checking. This script is a handy way to quickly check how many user accounts we have. What it does is pull all user objects from Active Directory, but only outputs the SamAccountName.
 
 <p>
   
 To make the script I put it into Powershell ISE and saved the file to my accounts directory, if you save it elsewhere you will have to specify the path Powershell needs to look at to execute the file. Syntax will be posted below: 
 
-- Syntax: Get-ADUser -Filter * -samAccountName | select samAccountName. Executing files is done with ./file-name-here
+```powershell
+Get-ADUser -Filter * -Properties samAccountName | select samAccountName
+```
 
 <img src="https://imgur.com/cSCCLla.png" height="50%" width="80%" alt="Disk Sanitization Steps"/>
 
@@ -42,7 +44,7 @@ Now that we know how to create very basic accounts, let's use some of the parame
 -AccountPassowrd (Read-Host -AsSecureString "Password-Goes-Here" -Force) -ChangePasswordAtLogon $True
 -Path "OU=(OU-Goes-Here),DC=(Domain-Name-Here),DC=com 
 ```
-Below is an image using the above parameters in Powershell, and verifying that the new account is created successfully by using our Active Directory Users script. 
+Below is an image using the above parameters in Powershell, and verifying that the new account is created successfully by using our Active Directory users script. 
 
 <img src="https://imgur.com/GlMGl1g.png" height="50%" width="80%" alt="Disk Sanitization Steps"/>
 
@@ -51,7 +53,7 @@ When trying to login with this newly created account on a domain joined workstat
 <img src="https://imgur.com/LcFZOTd.png" height="50%" width="80%" alt="Disk Sanitization Steps"/>
 
 <h2>Automating the Process of Creating User Accounts</h2>
-Creating User accounts in Powershell is not only quicker but less of a headache then using the GUI (In my opinion). The real strength of using Powershell with Active Directory is the ability to create multiple user accounts within a very small amount of time. Powershell gives the ability for us to write a script that we can ues anytime to create however many accounts we need. 
+Creating user accounts in Powershell is not only quicker but less of a headache then using the GUI (In my opinion). The real strength of using Powershell with Active Directory is the ability to create multiple user accounts within a very small amount of time. Powershell gives the ability for us to write a script that we can ues anytime to create however many accounts we need. 
 
 <p>
 
@@ -59,16 +61,16 @@ We have already used the commands and parameters needed to make this script, the
 
 <p>
 
-Note: I spent hours trying to find out what was wrong with my script, just to figure out Powershell was having trouble parsing Microsoft Excel even though it was in CSV format. Use a text editor for storing the user data, and make sure when saving that it is saved as UTF-8. Powershell can be extremely picky when it comes to reading data out of a file. I used Sublime and it worked immediately after switching off of Excel. 
+Note: I spent hours trying to find out what was wrong with my script, just to figure out Powershell was having trouble parsing Microsoft Excel even though it was in CSV format. Use a text editor for storing the user data, and make sure it is saved as UTF-8. Powershell can be extremely picky when it comes to reading a file. I used Sublime and it worked immediately after switching off of Excel. 
 
 <img src="https://imgur.com/a9NVcOI.png" height="50%" width="80%" alt="Disk Sanitization Steps"/>
 
-Now that we have our data, let's create a script to add all of these Users to our domain. The one I have below is extremely simple, but it gets the job done.
+Now that we have our data, let's create a script to add all of these users to our domain. The one I have below is extremely simple, but it gets the job done.
 
 ```powershell
 Import-Module ActiveDirectory
 
-#Need to specificy the path of the CSV file Powershell needs to pull data from
+#Need to specify the path of the CSV file Powershell needs to pull data from
 $AD_Users = Import-CSV -Path C:\Users\Administrator\NewUsersList
 
 #Assigning variables to the data in the CSV file
@@ -97,10 +99,13 @@ foreach ($User in $AD_Users){
 
 }
 ```
+Running the script and checking the GUI will ensure that it is working correctly and all user accounts are created within the proper OU's. I ran our ADUsers script before and after the newly created BulkUsers script to provide a better visual. 
 
-Anyone who is decently versed in Powershell can look at this script and know exactly what is going on. Running the script and checking the GUI will ensure that it is working correctly and all user accounts are created within the proper OU's. I ran our ADUsers script before and after the newly created BulkUsers script to provide a better visual. 
+<p> 
+
+Our script is complete and working like a charm. Tweaking the script to add additional variables and parameters is trivial, allowing us to scale up or down if necessary. 
 
 <img src="https://imgur.com/4E1vqPp.png" height="50%" width="80%" alt="Disk Sanitization Steps"/> 
-<img src="https://imgur.com/UUs04gq.png" height="50%" width="40%" alt="Disk Sanitization Steps"/> <img src="https://imgur.com/SMeLNl6.png" height="50%" width="40%" alt="Disk Sanitization Steps"/>
+<img src="https://imgur.com/UUs04gq.png" height="40%" width="50%" alt="Disk Sanitization Steps"/> 
+<img src="https://imgur.com/SMeLNl6.png" height="40%" width="50%" alt="Disk Sanitization Steps"/>
 
-As you can see all our users accounts have been successfully created, and have been placed in the correct OU. With this format we can now add any additional variables we might need, add new parameters, and more! Now when we are tasked with adding X amount of users to our domain we can make the process take seconds and save ourselves a headache. 
